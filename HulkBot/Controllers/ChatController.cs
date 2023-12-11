@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
 
@@ -8,11 +9,14 @@ namespace HulkBot.Controllers
     [ApiController]
     public class ChatController : ControllerBase
     {
-        private const string ApiUrl = "https://api.openai.com/v1/chat/completions";
-        private const string KEY = "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";
+        OpenAIOptions _openai;
+        public ChatController(IOptions<OpenAIOptions> options)
+        {
+            _openai = options.Value;
+        }
         [HttpPost]
         [Route("Completions")]
-        public async Task<string> Completions(List<CreateChatCompletions> completions) 
+        public async Task<string> Completions(List<CreateChatCompletions> completions)
         {
             var body = new
             {
@@ -23,10 +27,10 @@ namespace HulkBot.Controllers
             };
 
             using var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {KEY}");
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_openai.Key}");
 
             var content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(ApiUrl, content);
+            var response = await client.PostAsync(_openai.Url + "/v1/chat/completions", content);
             var reponseContent = await response.Content.ReadAsStringAsync();
             var contentObj = JsonSerializer.Deserialize<ChatCompletionsResponse>(reponseContent);
             return contentObj.choices.FirstOrDefault()?.message.content;

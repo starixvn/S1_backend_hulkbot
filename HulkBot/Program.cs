@@ -1,5 +1,9 @@
+using HulkBot;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<OpenAIOptions>(
+    builder.Configuration.GetSection(OpenAIOptions.OpenAI));
 // Add services to the container.
 
 builder.Services.AddControllers();
