@@ -14,6 +14,12 @@ namespace HulkBot.Controllers
         {
             _openai = options.Value;
         }
+        [HttpGet]
+        [Route("Start")]
+        public string Start()
+        {
+            return Guid.NewGuid().ToString();
+        }
         [HttpPost]
         [Route("Completions")]
         public async Task<string> Completions(List<CreateChatCompletions> completions)
