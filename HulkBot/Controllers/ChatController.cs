@@ -22,16 +22,22 @@ namespace HulkBot.Controllers
         }
         [HttpPost]
         [Route("Completions")]
-        public async Task<string> Completions(List<CreateChatCompletions> completions)
+        public async Task<string> Completions(CreateChatCompletions completions)
         {
+            var messages = BaseMessage.Create(1);
+            messages.Add(new Message
+            {
+                role = "user",
+                content = completions.Message
+            });
             var body = new
             {
                 model = "gpt-3.5-turbo",
                 max_tokens = 1000,
                 temperature = 0.5,
-                messages = completions
+                messages
             };
-
+            
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_openai.Key}");
 

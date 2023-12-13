@@ -2,14 +2,7 @@
 {
     public class CreateChatCompletions
     {
-        public string role { get; set; }
-        public string content { get; set; }
-    }
-
-    public class ChatGptMessage 
-    {
-        public string role { get; set; }
-        public string content { get; set; }
+        public string Message { get; set; }
     }
 
     public class Message
