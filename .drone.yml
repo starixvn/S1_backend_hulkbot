@@ -1,0 +1,14 @@
+kind: pipeline
+name: default
+
+steps:
+- name: test
+  image: alpine
+  commands:
+  - ls
+
+steps:
+- name: build
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  commands:
+  - dotnet build
