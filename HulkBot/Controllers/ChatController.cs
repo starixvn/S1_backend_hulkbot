@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using System.Text;
 using System.Text.Json;
 
@@ -7,18 +8,19 @@ namespace HulkBot.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ChatController : ControllerBase
+    public class ChatController(IOptions<OpenAIOptions> options, ChatService chatService = null) : ControllerBase
     {
-        OpenAIOptions _openai;
-        public ChatController(IOptions<OpenAIOptions> options)
-        {
-            _openai = options.Value;
-        }
+        readonly OpenAIOptions _openai = options.Value;
+        readonly ChatService _chatService = chatService;
+
         [HttpGet]
         [Route("Start")]
-        public string Start()
+        public async Task<string> Start()
         {
-            return Guid.NewGuid().ToString();
+            var id = ObjectId.GenerateNewId();
+            var chat = new Chat() { Id = id };
+            await _chatService.Create(chat);
+            return id.ToString();
         }
         [HttpPost]
         [Route("Completions")]
@@ -37,7 +39,6 @@ namespace HulkBot.Controllers
                 temperature = 0.5,
                 messages
             };
-            
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_openai.Key}");
 

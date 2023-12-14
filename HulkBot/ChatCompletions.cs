@@ -2,6 +2,7 @@
 {
     public class CreateChatCompletions
     {
+        public string ChatId { get; set; }
         public string Message { get; set; }
     }
 
