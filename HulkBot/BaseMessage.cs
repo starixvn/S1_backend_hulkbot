@@ -2,10 +2,9 @@
 {
     public static class BaseMessage
     {
-        public static List<Message> Create(int topicId) 
+        public static Message Create(int topicId) 
         {
-            var messages = new List<Message>();
-            var topic = topicId switch
+            var message = topicId switch
             {
                 1 => new Message() { role = "system", content = @"
                                 假設你是一個專業的客戶服務人員，對於客戶非常有禮貌、也能夠安撫客戶的抱怨情緒、
@@ -22,8 +21,7 @@
                                 ----------------------" },
                 _ => throw new ArgumentException()
             };
-            messages.Add(topic);
-            return messages;
+            return message;
         }
     }
 }

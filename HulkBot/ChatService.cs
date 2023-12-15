@@ -15,6 +15,8 @@ namespace HulkBot
 
         public async Task<Chat?> GetAsync(string id) =>
             await _chatCollection.Find(x => x.Id.ToString() == id).FirstOrDefaultAsync();
+        public async Task UpdateAsync(string id, Chat chat) =>
+            await _chatCollection.ReplaceOneAsync(x => x.Id.ToString() == id, chat);
         public async Task Create(Chat chat) =>
             await _chatCollection.InsertOneAsync(chat);
     }
