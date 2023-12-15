@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
 using System.Text;
 using System.Text.Json;
 
@@ -17,10 +16,9 @@ namespace HulkBot.Controllers
         [Route("Start")]
         public async Task<string> Start()
         {
-            var id = ObjectId.GenerateNewId();
-            var chat = new Chat(id);
+            var chat = new Chat();
             await _chatService.Create(chat);
-            return id.ToString();
+            return chat.Id.ToString();
         }
         [HttpPost]
         [Route("Completions")]
