@@ -1,7 +1,7 @@
 using HulkBot;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddHealthChecks();
 builder.Services.Configure<OpenAIOptions>(
     builder.Configuration.GetSection(OpenAIOptions.OpenAI));
 builder.Services.Configure<ChatDatabaseSettings>(
@@ -14,6 +14,7 @@ builder.Services.AddControllers();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.MapHealthChecks("/health");
 
 app.UseAuthorization();
 
