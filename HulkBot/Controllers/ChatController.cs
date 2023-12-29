@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace HulkBot.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ChatController(IOptions<OpenAIOptions> options, ChatService chatService = null) : ControllerBase
     {
