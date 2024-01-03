@@ -11,7 +11,7 @@ namespace HulkBot.Controllers
         [Route("Query/{transId}")]
         public string Query(string transId) 
         {
-            return $"this is transaction: {transId}";
+            return $"transaction {transId} get something wrong when third-party callback";
         }
     }
 }
