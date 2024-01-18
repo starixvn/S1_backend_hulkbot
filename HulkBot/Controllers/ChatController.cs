@@ -7,29 +7,37 @@ namespace HulkBot.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class ChatController(IOptions<OpenAIOptions> options, ChatService chatService = null) : ControllerBase
+    public class ChatController(IOptions<OpenAIOptions> options, IChatRepository chatRepository, IKonwledgeRepository konwledgeRepository) : ControllerBase
     {
         readonly OpenAIOptions _openai = options.Value;
-        readonly ChatService _chatService = chatService;
+        readonly IChatRepository _chatRepository = chatRepository;
+        readonly IKonwledgeRepository _konwledgeRepository = konwledgeRepository;
 
         [HttpGet]
         [Route("Start")]
         public async Task<string> Start()
         {
             var chat = new Chat();
-            await _chatService.Create(chat);
+            await _chatRepository.Create(chat);
             return chat.Id.ToString();
         }
+
         [HttpPost]
         [Route("Completions")]
         public async Task<string> Completions(CreateChatCompletions completions)
         {
-            var chat = await _chatService.GetAsync(completions.ChatId);
+            var chat = await _chatRepository.GetAsync(completions.ChatId);
             if (chat == null) return "chat not fount";
 
-            if (chat.Messages == null) 
+            if (chat.Messages == null)
             {
-                chat.InitialMessage(1);
+                var msg = _konwledgeRepository.Query("system");
+                var sb = new StringBuilder();
+                foreach (var m in msg)
+                {
+                    sb.AppendLine(m.Message);
+                }
+                chat.InitialMessage(sb.ToString());
             }
             chat.Append(new Message
             {
@@ -52,7 +60,7 @@ namespace HulkBot.Controllers
             var contentObj = JsonSerializer.Deserialize<ChatCompletionsResponse>(reponseContent);
             var message = contentObj.choices.FirstOrDefault()?.message;
             chat.Messages.Add(message);
-            await _chatService.UpdateAsync(completions.ChatId, chat);
+            await _chatRepository.UpdateAsync(completions.ChatId, chat);
             return message.content;
         }
     }

@@ -14,11 +14,15 @@ public class Chat
         Id = ObjectId.GenerateNewId();
     }
 
-    public void InitialMessage(int topic) 
+    public void InitialMessage(string message) 
     {
         Messages = new List<Message>
         {
-            BaseMessage.Create(topic)
+            new Message()
+            {
+                role = "system",
+                content = message
+            }
         };
     }
     public void Append(Message message) 

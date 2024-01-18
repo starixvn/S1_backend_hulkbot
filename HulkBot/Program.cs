@@ -2,14 +2,14 @@ using HulkBot;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHealthChecks();
-builder.Services.Configure<OpenAIOptions>(
-    builder.Configuration.GetSection(OpenAIOptions.OpenAI));
-builder.Services.Configure<ChatDatabaseSettings>(
-    builder.Configuration.GetSection("ChatDatabase"));
-builder.Services.Configure<Elastic>(
-    builder.Configuration.GetSection("Elastic"));
-// Add services to the container.
-builder.Services.AddScoped<ChatService>();
+builder.Services
+    .Configure<OpenAIOptions>(builder.Configuration.GetSection(OpenAIOptions.OpenAI))
+    .Configure<ChatDatabaseSettings>(builder.Configuration.GetSection("ChatDatabase"))
+    .Configure<Elastic>(builder.Configuration.GetSection("Elastic"));
+
+builder.Services
+    .AddScoped<IChatRepository, ChatRepository>()
+    .AddScoped<IKonwledgeRepository, KonwledgeRepository>();
 
 builder.Services.AddControllers();
 

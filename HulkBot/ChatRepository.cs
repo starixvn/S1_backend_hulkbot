@@ -3,14 +3,20 @@ using MongoDB.Driver;
 
 namespace HulkBot
 {
-    public class ChatService
+    public interface IChatRepository
+    {
+        Task Create(Chat chat);
+        Task<Chat> GetAsync(string id);
+        Task UpdateAsync(string id, Chat chat);
+    }
+    public class ChatRepository : IChatRepository
     {
         private readonly IMongoCollection<Chat> _chatCollection;
-        public ChatService(IOptions<ChatDatabaseSettings> settings)
+        public ChatRepository(IOptions<ChatDatabaseSettings> settings)
         {
             var mongoClient = new MongoClient(settings.Value.ConnectionString);
             var database = mongoClient.GetDatabase(settings.Value.DatabaseName);
-            _chatCollection = database.GetCollection<Chat>(settings.Value.CompletionsCollectionName);
+            _chatCollection = database.GetCollection<Chat>("completions");
         }
 
         public async Task<Chat?> GetAsync(string id) =>
