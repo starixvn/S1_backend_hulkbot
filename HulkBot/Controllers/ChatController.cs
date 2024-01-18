@@ -12,6 +12,9 @@ namespace HulkBot.Controllers
         readonly OpenAIOptions _openai = options.Value;
         readonly IChatRepository _chatRepository = chatRepository;
         readonly IKonwledgeRepository _konwledgeRepository = konwledgeRepository;
+        const string Model = "gpt-4";
+        const int Max_Token = 1000;
+        const double Temperature = 0.5;
 
         [HttpGet]
         [Route("Start")]
@@ -48,16 +51,12 @@ namespace HulkBot.Controllers
                 }
                 chat.InitialMessage(sb.ToString());
             }
-            chat.Append(new Message
-            {
-                role = "user",
-                content = completions.Message
-            });
+            chat.Append(new Message { role = "user", content = completions.Message });
             var body = new
             {
-                model = "gpt-3.5-turbo",
-                max_tokens = 1000,
-                temperature = 0.5,
+                model = Model,
+                max_tokens = Max_Token,
+                temperature = Temperature,
                 messages = chat.Messages
             };
             using var client = new HttpClient();
