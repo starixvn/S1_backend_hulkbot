@@ -30,7 +30,7 @@ namespace HulkBot.Controllers
         public async Task<string> Completions(CreateChatCompletions completions)
         {
             var chat = await _chatRepository.GetAsync(completions.ChatId);
-            if (chat == null) return "chat not fount";
+            if (chat == null) return "chat not found";
 
             if (chat.Messages == null)
             {

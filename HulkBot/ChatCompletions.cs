@@ -1,7 +1,10 @@
-﻿namespace HulkBot
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HulkBot
 {
     public class CreateChatCompletions
     {
+        [Required]
         public string ChatId { get; set; }
         public string Message { get; set; }
     }
