@@ -19,8 +19,7 @@ namespace HulkBot
         
         public List<Knowledge> Query(string subject) 
         {
-            //var filter = Builders<Knowledge>.Filter.Empty;
-            var filter = Builders<Knowledge>.Filter.Eq(k => k.Subject, subject);
+            var filter = Builders<Knowledge>.Filter.Empty;
             var result = _knowledgeCollection.Find(filter).ToList();
             return result;
         }

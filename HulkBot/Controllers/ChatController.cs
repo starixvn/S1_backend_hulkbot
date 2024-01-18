@@ -35,7 +35,15 @@ namespace HulkBot.Controllers
                 var sb = new StringBuilder();
                 foreach (var m in msg)
                 {
-                    sb.AppendLine(m.Message);
+                    if (!string.IsNullOrEmpty(m.Message))
+                    {
+                        sb.AppendLine(m.Message);
+                    }
+                    else 
+                    {
+                        sb.Append("Issue:").AppendLine(m.Issue);
+                        sb.Append("Solution:").AppendLine(m.Solution);
+                    }
                 }
                 chat.InitialMessage(sb.ToString());
             }
