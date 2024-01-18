@@ -41,6 +41,7 @@ namespace HulkBot.Controllers
                     }
                     else 
                     {
+                        sb.AppendLine("-----------------------------------");
                         sb.Append("Issue:").AppendLine(m.Issue);
                         sb.Append("Solution:").AppendLine(m.Solution);
                     }
