@@ -9,7 +9,7 @@ builder.Services
 
 builder.Services
     .AddScoped<IChatRepository, ChatRepository>()
-    .AddScoped<IKonwledgeRepository, KonwledgeRepository>();
+    .AddScoped<IKnowledgeRepository, KnowledgeRepository>();
 
 builder.Services.AddControllers();
 

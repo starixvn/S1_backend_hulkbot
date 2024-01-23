@@ -7,11 +7,11 @@ namespace HulkBot.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class ChatController(IOptions<OpenAIOptions> options, IChatRepository chatRepository, IKonwledgeRepository konwledgeRepository) : ControllerBase
+    public class ChatController(IOptions<OpenAIOptions> options, IChatRepository chatRepository, IKnowledgeRepository konwledgeRepository) : ControllerBase
     {
         readonly OpenAIOptions _openai = options.Value;
         readonly IChatRepository _chatRepository = chatRepository;
-        readonly IKonwledgeRepository _konwledgeRepository = konwledgeRepository;
+        readonly IKnowledgeRepository _konwledgeRepository = konwledgeRepository;
         const string Model = "gpt-4";
         const int Max_Token = 1000;
         const double Temperature = 0.5;

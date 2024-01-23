@@ -3,14 +3,14 @@ using MongoDB.Driver;
 
 namespace HulkBot
 {
-    public interface IKonwledgeRepository 
+    public interface IKnowledgeRepository 
     {
         List<Knowledge> Query(string subject);
     }
-    public class KonwledgeRepository : IKonwledgeRepository
+    public class KnowledgeRepository : IKnowledgeRepository
     {
         private readonly IMongoCollection<Knowledge> _knowledgeCollection;
-        public KonwledgeRepository(IOptions<ChatDatabaseSettings> settings)
+        public KnowledgeRepository(IOptions<ChatDatabaseSettings> settings)
         {
             var mongoClient = new MongoClient(settings.Value.ConnectionString);
             var database = mongoClient.GetDatabase(settings.Value.DatabaseName);
