@@ -3,8 +3,12 @@ type: docker
 name: hulkbot
 
 steps:
-- name: greeting
-  image: golang:1.12
+- name: en
+  image: alpine
   commands:
-  - go build
-  - go test
+  - echo hello world
+
+- name: fr
+  image: alpine
+  commands:
+  - echo bonjour monde
