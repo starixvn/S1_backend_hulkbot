@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hulkbot-configmap
+  namespace: nova88
+data:
+  environment: Development
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hulkbot-deployment
+  namespace: nova88
+  labels:
+    app: hulkbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hulkbot
+  template:
+    metadata:
+      labels:
+        app: hulkbot
+    spec:
+      containers:
+        - name: hulkbot
+          image: i-harbor.ailabpte.co/hulkbot/hulkbot:24ad93f
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: hulkbot-configmap
+                  key: environment
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+      imagePullSecrets:
+        - name: i-harbor
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hulkbot-service
+  namespace: nova88
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: hulkbot
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hulkbot-ingress
+  namespace: nova88
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/load-balancer-name: hulkbot-alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: instance
+    alb.ingress.kubernetes.io/group.name: chatbot-group
+    alb.ingress.kubernetes.io/certificate-arn: 'arn:aws:acm:ap-southeast-1:761771912479:certificate/9f7d243e-9115-4ee1-a036-20fcb217b5ac'
+    alb.ingress.kubernetes.io/security-groups: chatbot-sg
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+spec:
+  ingressClassName: alb
+  rules:
+    - host: "hulkbot.nova88prd.link"
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: hulkbot-service
+              port:
+                number: 80
