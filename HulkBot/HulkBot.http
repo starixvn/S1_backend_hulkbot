@@ -1,6 +1,15 @@
 @HulkBot_HostAddress = http://localhost:5050
 
-GET {{HulkBot_HostAddress}}/weatherforecast/
+### start chatroom
+GET {{HulkBot_HostAddress}}/Chat/Start
 Accept: application/json
 
+// chat
 ###
+POST {{HulkBot_HostAddress}}/Chat/Completions
+Content-Type: application/json
+
+{
+  "ChatId": "65d6b5b2fe532ca9663121d0",
+  "Message": "rebate »â¨ú³W«h"
+}
